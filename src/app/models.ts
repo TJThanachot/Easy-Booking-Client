@@ -4,7 +4,6 @@ export type Register = {
   name: string;
   phone: string;
   nationality: string;
-  role_id: number;
 };
 
 export type AlertMessage = {

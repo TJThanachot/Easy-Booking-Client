@@ -56,7 +56,7 @@ export default function SignUp({}: Props) {
     resolver: yupResolver(schema),
   });
 
-  function onSubmit(values: Register) {
+  const onSubmit = (values: Register) => {
     const alertObj = {
       title: "Are you sure?",
       text: "You are registering!",
@@ -67,7 +67,7 @@ export default function SignUp({}: Props) {
       confirmButtonText: "Yes, Confirm!",
     };
     questionAlert(registerAction, values, alertObj);
-  }
+  };
 
   function resetForm(): void {
     reset({
@@ -83,8 +83,8 @@ export default function SignUp({}: Props) {
     return nationalities;
   }, []);
   return (
-    <Container pt={16}>
-      <Flex minH={"100vh"} align={"center"} justify={"center"}>
+    <Container pt={"5rem"}>
+      <Flex align={"center"} justify={"center"}>
         <Stack spacing={5} mx={"30%"} maxW={"lg"} minW={"40vw"} py={10} px={6}>
           <Stack align={"center"}>
             <Heading fontSize={"4xl"} textAlign={"center"} color={"white"}>
@@ -97,17 +97,16 @@ export default function SignUp({}: Props) {
           <Box rounded={"lg"} bg={"white"} boxShadow={"lg"} width="100%" p={8}>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <Stack spacing={5}>
-                <Box>
-                  <FormControl
-                    id="name"
-                    isRequired
-                    isInvalid={Boolean(errors.name)}
-                  >
-                    <FormLabel htmlFor="name">Full Name</FormLabel>
-                    <Input type="text" {...register("name")} />
-                    <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-                  </FormControl>
-                </Box>
+
+                <FormControl
+                  id="name"
+                  isRequired
+                  isInvalid={Boolean(errors.name)}
+                >
+                  <FormLabel htmlFor="name">Full Name</FormLabel>
+                  <Input type="text" {...register("name")} />
+                  <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+                </FormControl>
 
                 <FormControl
                   id="email"
@@ -116,9 +115,9 @@ export default function SignUp({}: Props) {
                 >
                   <FormLabel htmlFor="email">Email address</FormLabel>
                   <Input type="email" {...register("email")} />
-
                   <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
                 </FormControl>
+
                 <FormControl
                   id="password"
                   isRequired
