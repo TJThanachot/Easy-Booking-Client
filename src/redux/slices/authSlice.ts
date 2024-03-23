@@ -1,34 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Register } from "@/app/models";
 
-export const initialState = {
-  value: {
-    email: "",
-    password: "",
-    name: "",
-    phone: "",
-    nationality: "",
-    role_id: 1,
-  } as Register,
-  message: "",
-};
+export const initialState: boolean = Boolean(
+  localStorage.getItem("accessToken") || false
+);
 
 export const authSlice = createSlice({
   name: "auth",
-  initialState: initialState.value,
+  initialState: initialState,
   reducers: {
-    user: (state, action: PayloadAction<any>) => {
-      return state;
+    getToken: (state, action: PayloadAction<any>) => {
+      localStorage.setItem("accessToken", action.payload);
+      return Boolean(action.payload || false);
     },
-    updateUser: (state, action: PayloadAction<any>) => {
-      return state;
-    },
-    deleteUser: (state, action: PayloadAction<any>) => {
-      return state;
+
+    deleteToken: (state) => {
+      localStorage.removeItem("accessToken");
+      return false;
     },
   },
 });
 
-export const { user, updateUser, deleteUser } = authSlice.actions;
+export const { getToken, deleteToken } = authSlice.actions;
 
 export default authSlice.reducer;

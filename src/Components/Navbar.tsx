@@ -22,15 +22,29 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
-
 import NextLink from "next/link";
 import { Link } from "@chakra-ui/react";
-
 import { linkColor, linkHoverColor } from "@/app/constants";
+import useAuthHook from "@/hooks/useAuthHook";
+import { useAppSelector } from "@/redux/store";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const { signOut, questionAlert } = useAuthHook();
+  const isSignIn = useAppSelector((state) => state.auth);
 
+  const signOutHandler = () => {
+    const alertObj = {
+      title: "Are you sure?",
+      text: "You are being sign out!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Confirm!",
+    };
+    questionAlert(signOut, null, alertObj);
+  };
   return (
     <Box zIndex={10} pos={"fixed"} minW={"99vw"}>
       <Flex
@@ -76,12 +90,13 @@ export default function Navbar() {
           spacing={6}
         >
           <Button
-            as={"a"}
+            as={NextLink}
             fontSize={"xl"}
             fontWeight={400}
             variant={"link"}
-            href={"#"}
+            href={"/signIn"}
             color={"white"}
+            hidden={isSignIn}
           >
             Sign In
           </Button>
@@ -96,8 +111,23 @@ export default function Navbar() {
             _hover={{
               bg: "#CFB53B",
             }}
+            hidden={isSignIn}
           >
             Sign Up
+          </Button>
+          <Button
+            display={{ base: "none", md: "inline-flex" }}
+            fontSize={"xl"}
+            fontWeight={600}
+            color={"black"}
+            bg={"#FFDF00"}
+            _hover={{
+              bg: "#CFB53B",
+            }}
+            hidden={!isSignIn}
+            onClick={signOutHandler}
+          >
+            Sign Out
           </Button>
         </Stack>
       </Flex>

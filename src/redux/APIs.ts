@@ -1,3 +1,4 @@
-const domainName = process.env.LOCALHOST;
+const domainName = process.env.localhost;
 
-export const registerAPI = "http://localhost:4000/users/register";
+export const registerAPI = `${domainName}/users/register`;
+export const signInAPI = `${domainName}/auth/login`;
