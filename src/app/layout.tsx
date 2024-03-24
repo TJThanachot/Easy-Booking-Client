@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import Navbar from "@/Components/Navbar";
 import { Box, Image } from "@chakra-ui/react";
 import { bgImage } from "./constants";
+import Footer from "@/Components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
 
             {children}
           </Box>
+          <Footer />
         </Providers>
       </body>
     </html>

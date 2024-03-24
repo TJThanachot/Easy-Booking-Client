@@ -17,27 +17,42 @@ import {
 import { linkColor, linkHoverColor } from "./constants";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import useBookingHook from "@/hooks/useBookingHook";
-import { use, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import PopupBooking from "@/Components/PopupBooking";
+import jwtInterceptor from "@/utils/jwtInterceptor";
 
 type Props = {
   children: React.ReactNode;
 };
 
 export default function Page() {
+  // intercrptor here ************************************************************
+  jwtInterceptor();
+
   const { fetchRoomType } = useBookingHook();
   const roomTypeList = useAppSelector((state) => state.booking.roomTypeList);
   const isSignIn = useAppSelector((state) => state.auth);
   const router = useRouter();
-  const [showPopupBooking, setShowPopupBooking] = useState(true);
+  const [showPopupBooking, setShowPopupBooking] = useState(false);
+
   useEffect(() => {
     fetchRoomType();
   }, []);
 
-  const bookingHandler = () => {
-    !isSignIn ? router.push("/signIn") : setShowPopupBooking(true);
+  const roomType = useRef({ description: "", price_per_night: "" });
+
+  const bookingHandler = (item: any) => {
+    if (!isSignIn) {
+      router.push("/signIn");
+    } else {
+      roomType.current = {
+        description: item.type_name,
+        price_per_night: item.price_per_night,
+      };
+      setShowPopupBooking(true);
+    }
   };
 
   function PriceWrapper(props: Props) {
@@ -60,7 +75,10 @@ export default function Page() {
   return (
     <Container pt={"5rem"} position={"relative"}>
       {showPopupBooking && (
-        <PopupBooking setShowPopupBooking={setShowPopupBooking} />
+        <PopupBooking
+          setShowPopupBooking={setShowPopupBooking}
+          roomItem={roomType.current}
+        />
       )}
       <Box py={12}>
         <VStack spacing={2} textAlign="center">
@@ -149,7 +167,9 @@ export default function Page() {
                         variant={
                           item.type_name === "Deluxe" ? "solid" : "outline"
                         }
-                        onClick={bookingHandler}
+                        onClick={() => {
+                          bookingHandler(item);
+                        }}
                       >
                         Book Now
                       </Button>

@@ -85,5 +85,12 @@ export default function useAuthHook() {
     };
   };
 
-  return { registerAction, questionAlert, signInAction, signOut };
+  return {
+    registerAction,
+    questionAlert,
+    showAlert,
+    prepareAlertObj,
+    signInAction,
+    signOut,
+  };
 }

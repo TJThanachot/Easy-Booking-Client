@@ -15,6 +15,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  Image,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -24,14 +25,14 @@ import {
 } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { Link } from "@chakra-ui/react";
-import { linkColor, linkHoverColor } from "@/app/constants";
+import { linkColor, linkHoverColor, hotelLogo } from "@/app/constants";
 import useAuthHook from "@/hooks/useAuthHook";
 import { useAppSelector } from "@/redux/store";
 
 export default function Navbar() {
+  const isSignIn = useAppSelector((state) => state.auth);
   const { isOpen, onToggle } = useDisclosure();
   const { signOut, questionAlert } = useAuthHook();
-  const isSignIn = useAppSelector((state) => state.auth);
 
   const signOutHandler = () => {
     const alertObj = {
@@ -52,7 +53,7 @@ export default function Navbar() {
         backdropFilter="blur(20px)"
         minH={"5rem"}
         py={{ base: 2 }}
-        px={{ base: 4 }}
+        px={{ base: 8 }}
         align={"center"}
       >
         <Flex
@@ -71,14 +72,12 @@ export default function Navbar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
+          <Image src={hotelLogo} w={"7rem"} h={"4rem"} />
+          <Flex
+            display={{ base: "none", md: "flex" }}
+            alignItems={"center"}
+            ml={10}
           >
-            Logo
-          </Text>
-
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
@@ -142,7 +141,7 @@ export default function Navbar() {
 const DesktopNav = () => {
   // const linkColor = useColorModeValue("gray.600", "gray.200");
   // const linkHoverColor = useColorModeValue("gray.800", "white");
-
+  const isSignIn = useAppSelector((state) => state.auth);
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
@@ -154,7 +153,11 @@ const DesktopNav = () => {
               <Link
                 as={NextLink}
                 p={2}
-                href={navItem.href ?? "#"}
+                href={
+                  navItem.href === "/booking-list" && !isSignIn
+                    ? "/signIn"
+                    : navItem.href
+                }
                 fontSize={"xl"}
                 fontWeight={500}
                 color={linkColor}
@@ -308,37 +311,37 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/",
   },
   {
-    label: "About",
-    href: "/about",
+    label: "Booking",
+    href: "/booking-list",
   },
-  {
-    label: "Inspiration",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
+  // {
+  //   label: "Inspiration",
+  //   children: [
+  //     {
+  //       label: "Explore Design Work",
+  //       subLabel: "Trending Design to inspire you",
+  //       href: "#",
+  //     },
+  //     {
+  //       label: "New & Noteworthy",
+  //       subLabel: "Up-and-coming Designers",
+  //       href: "#",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Find Work",
+  //   children: [
+  //     {
+  //       label: "Job Board",
+  //       subLabel: "Find your dream design job",
+  //       href: "#",
+  //     },
+  //     {
+  //       label: "Freelance Projects",
+  //       subLabel: "An exclusive list for contract work",
+  //       href: "#",
+  //     },
+  //   ],
+  // },
 ];

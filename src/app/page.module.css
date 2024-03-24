@@ -228,3 +228,7 @@
     transform: rotate(0deg);
   }
 } */
+.rdp-weeknumber,
+.rdp-day {
+  box-shadow: unset;
+}
