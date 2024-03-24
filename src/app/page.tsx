@@ -17,9 +17,10 @@ import {
 import { linkColor, linkHoverColor } from "./constants";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import useBookingHook from "@/hooks/useBookingHook";
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import PopupBooking from "@/Components/PopupBooking";
 
 type Props = {
   children: React.ReactNode;
@@ -30,12 +31,13 @@ export default function Page() {
   const roomTypeList = useAppSelector((state) => state.booking.roomTypeList);
   const isSignIn = useAppSelector((state) => state.auth);
   const router = useRouter();
+  const [showPopupBooking, setShowPopupBooking] = useState(true);
   useEffect(() => {
     fetchRoomType();
   }, []);
 
   const bookingHandler = () => {
-    !isSignIn && router.push("/signIn");
+    !isSignIn ? router.push("/signIn") : setShowPopupBooking(true);
   };
 
   function PriceWrapper(props: Props) {
@@ -56,7 +58,10 @@ export default function Page() {
   }
 
   return (
-    <Container pt={"5rem"}>
+    <Container pt={"5rem"} position={"relative"}>
+      {showPopupBooking && (
+        <PopupBooking setShowPopupBooking={setShowPopupBooking} />
+      )}
       <Box py={12}>
         <VStack spacing={2} textAlign="center">
           <Heading as="h1" fontSize="4xl" color={"white"} autoCapitalize="">
