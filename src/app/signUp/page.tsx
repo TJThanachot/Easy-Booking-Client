@@ -83,7 +83,7 @@ export default function SignUp({}: Props) {
     return nationalities;
   }, []);
   return (
-    <Container pt={"5rem"}>
+    <Container pt={"5rem"} minH={"93vh"}>
       <Flex align={"center"} justify={"center"}>
         <Stack spacing={5} mx={"30%"} maxW={"lg"} minW={"40vw"} py={10} px={6}>
           <Stack align={"center"}>
@@ -97,7 +97,6 @@ export default function SignUp({}: Props) {
           <Box rounded={"lg"} bg={"white"} boxShadow={"lg"} width="100%" p={8}>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <Stack spacing={5}>
-
                 <FormControl
                   id="name"
                   isRequired

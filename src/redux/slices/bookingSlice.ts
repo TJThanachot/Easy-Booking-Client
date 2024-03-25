@@ -13,8 +13,8 @@ export const bookingSlice = createSlice({
       return { ...state, roomTypeList: action.payload };
     },
 
-    setBookingLIst: (state) => {
-      return false;
+    setBookingLIst: (state, action: PayloadAction<any>) => {
+      return { ...state, bookingList: action.payload };
     },
   },
 });

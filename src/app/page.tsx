@@ -21,16 +21,12 @@ import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import PopupBooking from "@/Components/PopupBooking";
-import jwtInterceptor from "@/utils/jwtInterceptor";
 
 type Props = {
   children: React.ReactNode;
 };
 
 export default function Page() {
-  // intercrptor here ************************************************************
-  jwtInterceptor();
-
   const { fetchRoomType } = useBookingHook();
   const roomTypeList = useAppSelector((state) => state.booking.roomTypeList);
   const isSignIn = useAppSelector((state) => state.auth);
