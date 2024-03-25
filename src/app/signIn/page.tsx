@@ -47,7 +47,7 @@ export default function SimpleCard() {
   };
 
   return (
-    <Container pt={"5rem"}>
+    <Container pt={"5rem"} minH={"93vh"}>
       <Flex align={"center"} justify={"center"}>
         <Stack spacing={5} mx={"30%"} maxW={"lg"} minW={"40vw"} py={10} px={6}>
           <Stack align={"center"}>

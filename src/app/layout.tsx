@@ -18,19 +18,18 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <Box pos={"relative"}>
+          <Box pos={"relative"} minH={"100vh"}>
             <Image
               zIndex={-10}
               pos={"absolute"}
               top={0}
-              minH={"100vh"}
+              minH={"50rem"}
               minW={"100vw"}
               w={"full"}
-              h={"full"}
+              h={"58rem"}
               src={bgImage}
             ></Image>
             <Navbar />
-
             {children}
           </Box>
           <Footer />

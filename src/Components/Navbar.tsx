@@ -161,6 +161,7 @@ const DesktopNav = () => {
                 fontSize={"xl"}
                 fontWeight={500}
                 color={linkColor}
+                textShadow="1px 1px #FFD700"
                 _hover={{
                   textDecoration: "none",
                   color: linkHoverColor,

@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from "js-cookie";
+
 function jwtInterceptor() {
   axios.interceptors.request.use((req) => {
     const hasToken = Boolean(localStorage.getItem("accessToken"));
