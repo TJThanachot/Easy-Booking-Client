@@ -18,3 +18,10 @@ export type CreateBooking = {
   description: string;
   price_per_night: number;
 };
+
+export type CreateTransection = {
+  booking_id: number;
+  paid_type_id: number;
+  total_price: number;
+  description: string;
+};
