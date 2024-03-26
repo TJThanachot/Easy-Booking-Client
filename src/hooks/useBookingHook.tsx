@@ -3,12 +3,13 @@ import {
   createBookingAPI,
   getBookingList,
   getRoomTypesAPI,
+  insertTransection,
 } from "@/redux/APIs";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import Swal from "sweetalert2";
 import { setBookingLIst, setRoomTypeList } from "@/redux/slices/bookingSlice";
-import { CreateBooking } from "@/app/models";
+import { CreateBooking, CreateTransection } from "@/app/models";
 import useAuthHook from "./useAuthHook";
 
 export default function useBookingHook() {
@@ -53,5 +54,24 @@ export default function useBookingHook() {
     }
   };
 
-  return { fetchRoomType, createBooking, fetchBookingList };
+  const createTransection = async (payload: CreateTransection) => {
+    console.log(payload);
+    // try {
+    //   const result = await axios.post(insertTransection, payload);
+    //   const success: boolean = result.request.status === 201;
+    //   showAlert(
+    //     prepareAlertObj(
+    //       success ? "Success" : "Error",
+    //       result?.data?.message,
+    //       success ? "success" : "error"
+    //     ),
+    //     success ? "booking-list" : null
+    //   );
+    // } catch (error) {
+    //   console.log(error);
+    //   showAlert(prepareAlertObj("Error", String(error), "error"));
+    // }
+  };
+
+  return { fetchRoomType, createBooking, fetchBookingList, createTransection };
 }
