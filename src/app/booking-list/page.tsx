@@ -10,23 +10,35 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Flex,
+  ButtonGroup,
+  Button,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-
+import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import BookingCard from "@/Components/BookingCard";
 import PopupTransection from "@/Components/PopupTransection";
 
 const BookingList = () => {
-  const bookingList = useAppSelector((state) => state.booking.bookingList);
+  const { bookingList, totalBookingListPage } = useAppSelector((state) => {
+    return {
+      bookingList: state?.booking?.bookingList,
+      totalBookingListPage: state?.booking?.totalBookingListPage || 1,
+    };
+  });
   const { fetchBookingList } = useBookingHook();
   const [showPopupTransection, setShowPopupTransection] = useState({
     isShow: false,
     booking: {},
   });
-
+  const [pageNumber, setPageNumber] = useState(1);
+  const [skeleton, setSkeleton] = useState(false);
   useEffect(() => {
-    fetchBookingList();
-  }, []);
+    setSkeleton(false);
+    fetchBookingList(pageNumber).then(() => {
+      setSkeleton(true);
+    });
+  }, [pageNumber]);
 
   return (
     <Container pt={"10rem"} pb={"5rem"} minW={"60vw"} minH={"93vh"}>
@@ -77,15 +89,64 @@ const BookingList = () => {
           </Stack>
           <Divider />
 
-          {bookingList.map((item: any, index: number) => {
+          {bookingList?.map((item: any, index: number) => {
             return (
               <BookingCard
                 key={index}
                 booking={item}
+                showSkeleton={skeleton}
                 setShowPopupTransection={setShowPopupTransection}
               />
             );
           })}
+
+          {/* pagination---------------------------------------------------------------------- */}
+          <Flex
+            w={"100%"}
+            justifyContent={"end"}
+            alignItems={"center"}
+            gap={"1rem"}
+            p={"1rem"}
+          >
+            <Button
+              bg={useColorModeValue("red.200", "gray.100")}
+              color={"white"}
+              rounded={"md"}
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
+              }}
+              onClick={() =>
+                setPageNumber((prev: number) => {
+                  return prev !== 1 ? prev - 1 : 1;
+                })
+              }
+            >
+              <ArrowBackIcon boxSize={"2rem"} />
+            </Button>
+            <Heading as="h4" size="md">
+              Page {pageNumber} of {totalBookingListPage}
+            </Heading>
+            <Button
+              bg={useColorModeValue("red.200", "gray.100")}
+              color={"white"}
+              rounded={"md"}
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
+              }}
+              onClick={() =>
+                setPageNumber((prev: number) => {
+                  return prev < totalBookingListPage
+                    ? prev + 1
+                    : totalBookingListPage;
+                })
+              }
+            >
+              <ArrowForwardIcon boxSize={"2rem"} />
+            </Button>
+          </Flex>
+          {/* pagination---------------------------------------------------------------------- */}
         </Stack>
       </Box>
     </Container>

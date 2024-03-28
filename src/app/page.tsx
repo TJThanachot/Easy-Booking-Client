@@ -13,6 +13,7 @@ import {
   ListItem,
   ListIcon,
   Button,
+  Skeleton,
 } from "@chakra-ui/react";
 import { linkColor, linkHoverColor } from "./constants";
 import { CheckCircleIcon } from "@chakra-ui/icons";
@@ -32,9 +33,11 @@ export default function Page() {
   const isSignIn = useAppSelector((state) => state.auth);
   const router = useRouter();
   const [showPopupBooking, setShowPopupBooking] = useState(false);
+  const [skeleton, setSkeleton] = useState(false);
 
   useEffect(() => {
-    fetchRoomType();
+    setSkeleton(false);
+    fetchRoomType().then(() => setSkeleton(true));
   }, []);
 
   const roomType = useRef({ description: "", price_per_night: "" });
@@ -63,7 +66,7 @@ export default function Page() {
         borderColor={useColorModeValue("gray.200", "gray.500")}
         borderRadius={"xl"}
       >
-        {children}
+        <Skeleton isLoaded={skeleton}>{children}</Skeleton>
       </Box>
     );
   }

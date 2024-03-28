@@ -61,10 +61,17 @@ export default function useAuthHook() {
     }
   };
 
-  const showAlert = (alertObj: any, nav: string | null = null): void => {
-    Swal.fire(alertObj).then(() => {
+  const showAlert = (
+    alertObj: any,
+    nav: string | null = null,
+    refresh: boolean = false
+  ): void => {
+    Swal.fire(alertObj).then((result) => {
       if (nav) {
         router.push(nav);
+      }
+      if (refresh && result.isConfirmed) {
+        window.location.reload();
       }
     });
   };
