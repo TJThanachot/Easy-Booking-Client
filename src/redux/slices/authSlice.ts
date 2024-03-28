@@ -9,7 +9,12 @@ export const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     getToken: (state, action: PayloadAction<any>) => {
-      localStorage.setItem("accessToken", action.payload);
+      const expirationTime = new Date().getTime() + 1 * 60 * 60 * 1000; // 1 hour in milliseconds
+      const item = {
+        value: action.payload,
+        expiry: expirationTime,
+      };
+      localStorage.setItem("accessToken", JSON.stringify(item));
       return Boolean(action.payload || false);
     },
 

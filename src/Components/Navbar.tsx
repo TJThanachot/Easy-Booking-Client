@@ -154,7 +154,9 @@ const DesktopNav = () => {
                 as={NextLink}
                 p={2}
                 href={
-                  navItem.href === "/booking-list" && !isSignIn
+                  (navItem.href === "/booking-list" ||
+                    navItem.href === "/calendar") &&
+                  !isSignIn
                     ? "/signIn"
                     : navItem.href
                 }
@@ -314,6 +316,10 @@ const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Booking",
     href: "/booking-list",
+  },
+  {
+    label: "The God Room Calendar",
+    href: "/calendar",
   },
   // {
   //   label: "Inspiration",

@@ -72,11 +72,16 @@ export default function PopupTransection({
       total_price: Number(values.totalPrice),
       description: values.description || "",
     });
+    closePopup();
+  };
+
+  const closePopup = () => {
     reset({
       paidType: "",
       description: "",
       totalPrice: booking.total_price,
     });
+    setShowPopupTransection({ isShow: false, booking: [] });
   };
 
   return (
@@ -173,14 +178,7 @@ export default function PopupTransection({
                 opacity: "0.8",
               }}
               variant="outline"
-              onClick={() => {
-                reset({
-                  paidType: "",
-                  description: "",
-                  totalPrice: booking.total_price,
-                });
-                setShowPopupTransection({ isShow: false, booking: [] });
-              }}
+              onClick={closePopup}
             >
               <CloseIcon />
             </Button>

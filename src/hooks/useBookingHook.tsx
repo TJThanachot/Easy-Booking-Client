@@ -26,10 +26,14 @@ export default function useBookingHook() {
     }
   };
 
-  const fetchBookingList = async () => {
+  const fetchBookingList = async (pageNumber: number) => {
     try {
-      const result = await axios.get(getBookingList);
-      dispatch(setBookingLIst(result?.data?.bookingList));
+      const result = await axios.get(getBookingList + "/" + pageNumber);
+      const payload = {
+        bookingList: result?.data?.bookingList,
+        totalPage: result?.data?.count,
+      };
+      dispatch(setBookingLIst(payload));
     } catch (error) {
       console.log(error);
       showAlert(prepareAlertObj("Error", String(error), "error"));
@@ -55,22 +59,23 @@ export default function useBookingHook() {
   };
 
   const createTransection = async (payload: CreateTransection) => {
-    console.log(payload);
-    // try {
-    //   const result = await axios.post(insertTransection, payload);
-    //   const success: boolean = result.request.status === 201;
-    //   showAlert(
-    //     prepareAlertObj(
-    //       success ? "Success" : "Error",
-    //       result?.data?.message,
-    //       success ? "success" : "error"
-    //     ),
-    //     success ? "booking-list" : null
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    //   showAlert(prepareAlertObj("Error", String(error), "error"));
-    // }
+    try {
+      const result = await axios.post(insertTransection, payload);
+      const success: boolean = result.request.status === 201;
+
+      showAlert(
+        prepareAlertObj(
+          success ? "Success" : "Error",
+          result?.data?.message,
+          success ? "success" : "error"
+        ),
+        null,
+        true //refresh
+      );
+    } catch (error) {
+      console.log(error);
+      showAlert(prepareAlertObj("Error", String(error), "error"));
+    }
   };
 
   return { fetchRoomType, createBooking, fetchBookingList, createTransection };

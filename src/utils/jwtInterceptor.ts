@@ -6,7 +6,9 @@ function jwtInterceptor() {
     if (hasToken) {
       req.headers = {
         ...req.headers,
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem("accessToken")).value
+        }`,
       };
     }
     return req;
