@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import * as yup from "yup";
+import { bookingSchema } from "@/app/constants";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CloseIcon } from "@chakra-ui/icons";
@@ -25,17 +26,7 @@ type Props = { setShowPopupBooking: any; roomItem: any };
 export default function PopupBooking({ setShowPopupBooking, roomItem }: Props) {
   const [checkInValue, setCheckInValue] = useState("");
   const { createBooking } = useBookingHook();
-  const schema = yup.object().shape({
-    checkIn: yup.string().required("Check in date is required!"),
-    checkOut: yup.string().required("Check out date id required!"),
-    totalPeople: yup
-      .number()
-      .required("Total People is required!")
-      .typeError("Total People is required!")
-      .test("isNum", "Total people should have at lease 1 person", (value) => {
-        return typeof value === "number" && value > 0;
-      }),
-  });
+
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -50,7 +41,7 @@ export default function PopupBooking({ setShowPopupBooking, roomItem }: Props) {
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
-    resolver: yupResolver(schema),
+    resolver: yupResolver(bookingSchema),
   });
 
   const onSubmit = (values: any) => {
@@ -102,7 +93,7 @@ export default function PopupBooking({ setShowPopupBooking, roomItem }: Props) {
                 {...register("checkOut")}
                 type="date"
                 disabled={!checkInValue}
-                min={format(new Date(checkInValue || new Date()), "yyyy-MM-dd")}
+                min={format(new Date(checkInValue || new Date()), "MM-dd-yyyy")}
               />
               <FormErrorMessage>{errors?.checkOut?.message}</FormErrorMessage>
             </FormControl>

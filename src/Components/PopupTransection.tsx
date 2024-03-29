@@ -12,13 +12,13 @@ import {
   FormLabel,
   FormControl,
   Input,
+  InputGroup,
   Button,
   Heading,
   Textarea,
   Flex,
   Select,
   Text,
-  InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react";
 import useBookingHook from "@/hooks/useBookingHook";
@@ -94,10 +94,10 @@ export default function PopupTransection({
           </Flex>
 
           <Text>
-            Check In : {format(new Date(booking.check_in), "yyyy-MM-dd")}
+            Check In : {format(new Date(booking.check_in), "MM-dd-yyyy")}
           </Text>
           <Text>
-            Check Out : {format(new Date(booking.check_out), "yyyy-MM-dd")}
+            Check Out : {format(new Date(booking.check_out), "MM-dd-yyyy")}
           </Text>
           <Text>Room Number : {booking.rooms.room_name}</Text>
           <Text>Total People : {booking.total_people}</Text>
