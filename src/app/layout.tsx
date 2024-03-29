@@ -23,10 +23,8 @@ export default function RootLayout({
               zIndex={-10}
               pos={"absolute"}
               top={0}
-              minH={"52rem"}
+              h={"100%"}
               minW={"100vw"}
-              w={"full"}
-              h={"60rem"}
               src={bgImage}
             ></Image>
             <Navbar />

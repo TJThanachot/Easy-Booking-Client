@@ -318,7 +318,7 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/booking-list",
   },
   {
-    label: "The God Room Calendar",
+    label: "The Lord Room Calendar",
     href: "/calendar",
   },
   // {

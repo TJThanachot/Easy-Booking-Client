@@ -85,11 +85,11 @@ export default function BookingCard({
             <List spacing={3} textAlign="start">
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                check in {format(new Date(booking.check_in), "yyyy-MM-dd")}
+                check in {format(new Date(booking.check_in), "MM-dd-yyyy")}
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                check out {format(new Date(booking.check_out), "yyyy-MM-dd")}
+                check out {format(new Date(booking.check_out), "MM-dd-yyyy")}
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
