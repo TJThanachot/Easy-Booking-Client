@@ -20,12 +20,14 @@ import {
 } from "@chakra-ui/react";
 import useBookingHook from "@/hooks/useBookingHook";
 import Popup from "./Popup";
+import useAuthHook from "@/hooks/useAuthHook";
 
 type Props = { setShowPopupBooking: any; roomItem: any };
 
 export default function PopupBooking({ setShowPopupBooking, roomItem }: Props) {
   const [checkInValue, setCheckInValue] = useState("");
   const { createBooking } = useBookingHook();
+  const { questionAlert } = useAuthHook();
 
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -45,13 +47,24 @@ export default function PopupBooking({ setShowPopupBooking, roomItem }: Props) {
   });
 
   const onSubmit = (values: any) => {
-    createBooking({
+    const newValues = {
       check_in: values.checkIn,
       check_out: values.checkOut,
       total_people: values.totalPeople,
       description: roomItem.description,
       price_per_night: roomItem.price_per_night,
-    });
+    };
+
+    const alertObj = {
+      title: "Are you sure?",
+      text: "You are booking a room!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Confirm!",
+    };
+    questionAlert(createBooking, newValues, alertObj);
     reset({
       checkIn: "",
       checkOut: "",
@@ -93,7 +106,18 @@ export default function PopupBooking({ setShowPopupBooking, roomItem }: Props) {
                 {...register("checkOut")}
                 type="date"
                 disabled={!checkInValue}
-                min={format(new Date(checkInValue || new Date()), "MM-dd-yyyy")}
+                min={
+                  checkInValue
+                    ? format(
+                        new Date(
+                          new Date(checkInValue).setDate(
+                            new Date(checkInValue).getDate() + 1
+                          )
+                        ),
+                        "yyyy-MM-dd"
+                      )
+                    : undefined
+                }
               />
               <FormErrorMessage>{errors?.checkOut?.message}</FormErrorMessage>
             </FormControl>

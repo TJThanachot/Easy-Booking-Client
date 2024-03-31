@@ -29,7 +29,7 @@ export default function SimpleCard() {
 
   const schema = yup.object().shape({
     email: yup.string().email().required("Email is required!"),
-    password: yup.string().min(0).required("Password is required!"),
+    password: yup.string().min(5).required("Password is required!"),
   });
 
   const {

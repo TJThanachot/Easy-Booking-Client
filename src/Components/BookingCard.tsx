@@ -65,7 +65,7 @@ export default function BookingCard({
               onClick={() => {
                 setShowPopupTransection({ isShow: true, booking: booking });
               }}
-              variant={"link"}
+              // variant={"link"}
               color={
                 booking.statusLookups.description === "close"
                   ? "green.500"
@@ -85,11 +85,11 @@ export default function BookingCard({
             <List spacing={3} textAlign="start">
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                check in {format(new Date(booking.check_in), "MM-dd-yyyy")}
+                check in {format(new Date(booking.check_in), "yyyy-MM-dd")}
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                check out {format(new Date(booking.check_out), "MM-dd-yyyy")}
+                check out {format(new Date(booking.check_out), "yyyy-MM-dd")}
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
