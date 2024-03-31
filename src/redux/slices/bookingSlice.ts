@@ -4,6 +4,7 @@ export const initialState: any = {
   roomTypeList: [],
   bookingList: [],
   totalBookingListPage: 1,
+  theLordRoomCheckInCheckOutList: [],
 };
 
 export const bookingSlice = createSlice({
@@ -14,16 +15,21 @@ export const bookingSlice = createSlice({
       return { ...state, roomTypeList: action.payload };
     },
 
-    setBookingLIst: (state, action: PayloadAction<any>) => {
+    setBookingList: (state, action: PayloadAction<any>) => {
       return {
         ...state,
         bookingList: action.payload.bookingList,
         totalBookingListPage: action.payload.totalPage,
       };
     },
+
+    setTheLordRoomBookedList: (state, action: PayloadAction<any>) => {
+      return { ...state, theLordRoomCheckInCheckOutList: action.payload };
+    },
   },
 });
 
-export const { setRoomTypeList, setBookingLIst } = bookingSlice.actions;
+export const { setRoomTypeList, setBookingList, setTheLordRoomBookedList } =
+  bookingSlice.actions;
 
 export default bookingSlice.reducer;

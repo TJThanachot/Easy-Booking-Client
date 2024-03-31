@@ -4,17 +4,32 @@ import {
   getBookingList,
   getRoomTypesAPI,
   insertTransection,
+  createBookingTheLordRoomAPI,
+  getBookedTheLordRoomAPI,
 } from "@/redux/APIs";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import Swal from "sweetalert2";
-import { setBookingLIst, setRoomTypeList } from "@/redux/slices/bookingSlice";
+import {
+  setBookingList,
+  setRoomTypeList,
+  setTheLordRoomBookedList,
+} from "@/redux/slices/bookingSlice";
 import { CreateBooking, CreateTransection } from "@/app/models";
 import useAuthHook from "./useAuthHook";
 
 export default function useBookingHook() {
   const dispatch = useDispatch<AppDispatch>();
   const { showAlert, prepareAlertObj } = useAuthHook();
+
+  const fetchTheLordRoomBooked = async () => {
+    try {
+      const result = await axios.get(getBookedTheLordRoomAPI);
+      dispatch(setTheLordRoomBookedList(result?.data?.checkInCheckOutList));
+    } catch (error) {
+      console.log(error);
+      showAlert(prepareAlertObj("Error", String(error), "error"));
+    }
+  };
 
   const fetchRoomType = async () => {
     try {
@@ -33,7 +48,7 @@ export default function useBookingHook() {
         bookingList: result?.data?.bookingList,
         totalPage: result?.data?.count,
       };
-      dispatch(setBookingLIst(payload));
+      dispatch(setBookingList(payload));
     } catch (error) {
       console.log(error);
       showAlert(prepareAlertObj("Error", String(error), "error"));
@@ -43,6 +58,24 @@ export default function useBookingHook() {
   const createBooking = async (payload: CreateBooking) => {
     try {
       const result = await axios.post(createBookingAPI, payload);
+      const success: boolean = result.request.status === 201;
+      showAlert(
+        prepareAlertObj(
+          success ? "Success" : "Error",
+          result?.data?.message,
+          success ? "success" : "error"
+        ),
+        success ? "booking-list" : null
+      );
+    } catch (error) {
+      console.log(error);
+      showAlert(prepareAlertObj("Error", String(error), "error"));
+    }
+  };
+
+  const createTheLordRoomBooking = async (payload: CreateBooking) => {
+    try {
+      const result = await axios.post(createBookingTheLordRoomAPI, payload);
       const success: boolean = result.request.status === 201;
       showAlert(
         prepareAlertObj(
@@ -78,5 +111,12 @@ export default function useBookingHook() {
     }
   };
 
-  return { fetchRoomType, createBooking, fetchBookingList, createTransection };
+  return {
+    fetchRoomType,
+    createBooking,
+    fetchBookingList,
+    createTransection,
+    fetchTheLordRoomBooked,
+    createTheLordRoomBooking,
+  };
 }

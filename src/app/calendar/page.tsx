@@ -1,41 +1,78 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
   Heading,
   Stack,
   Text,
-  useColorModeValue,
   Flex,
-  ButtonGroup,
   VStack,
   FormErrorMessage,
   FormLabel,
   FormControl,
   Input,
-  InputGroup,
   Button,
 } from "@chakra-ui/react";
-import { bookingSchema } from "../constants";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { linkColor } from "../constants";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { format } from "date-fns";
+import * as yup from "yup";
+import useBookingHook from "@/hooks/useBookingHook";
+import { useAppSelector } from "@/redux/store";
+import useAuthHook from "@/hooks/useAuthHook";
+
 type Props = {};
 
 export default function CalendarRoom({}: Props) {
+  const { createTheLordRoomBooking, fetchTheLordRoomBooked } = useBookingHook();
+  const { showAlert, prepareAlertObj, questionAlert } = useAuthHook();
+
+  const checkInCheckOutList = useAppSelector(
+    (state) => state.booking.theLordRoomCheckInCheckOutList
+  );
+
+  useEffect(() => {
+    fetchTheLordRoomBooked();
+  }, []);
+
+  // set default date section----------------------------------------
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
-
-  const [dates, setDates] = useState<Date[]>([today, tomorrow]);
-
+  const [dates, setDates] = useState<any[]>([today, tomorrow]);
   const handleDateChange = (newDates: Date[]) => {
     setDates(newDates);
   };
+  //end set default date section--------------------------------------
+
+  // set disable date section-----------------------------------------
+  const tileDisabled = ({ date }: any) => {
+    // Check if the date falls within any of the specified ranges
+    return checkInCheckOutList?.some((range: any) => {
+      const setDateTime = format(new Date(date), "yyyy-MM-dd");
+      return (
+        setDateTime >= format(new Date(range.check_in), "yyyy-MM-dd") &&
+        setDateTime <= format(new Date(range.check_out), "yyyy-MM-dd")
+      );
+    });
+  };
+  // end set disable date section--------------------------------------
+
+  // form control section----------------------------------------------
+  const schema = yup.object().shape({
+    totalPeople: yup
+      .number()
+      .required("Total People is required!")
+      .typeError("Total People is required!")
+      .test("isNum", "Total people should have at lease 1 person", (value) => {
+        return typeof value === "number" && value > 0;
+      }),
+  });
 
   const {
     handleSubmit,
@@ -44,24 +81,51 @@ export default function CalendarRoom({}: Props) {
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onBlur",
-    resolver: yupResolver(bookingSchema),
+    resolver: yupResolver(schema),
   });
 
   const onSubmit = (values: any) => {
-    console.log(values);
-    // createBooking({
-    //   check_in: values.checkIn,
-    //   check_out: values.checkOut,
-    //   total_people: values.totalPeople,
-    //   description: "The Load Room",
-    //   price_per_night: 9999,
-    // });
-    // reset({
-    //   checkIn: "",
-    //   checkOut: "",
-    //   totalPeople: 0,
-    // });
+    const newValues = {
+      check_in: format(dates[0], "yyyy-MM-dd"),
+      check_out: format(dates[1], "yyyy-MM-dd"),
+      total_people: values.totalPeople,
+      description: "The Load Room",
+      price_per_night: 9999,
+    };
+
+    const isUnavailableDate = checkInCheckOutList.find((elem: any) => {
+      return (
+        (format(new Date(elem.check_in), "yyyy-MM-dd") >=
+          format(new Date(dates[0]), "yyyy-MM-dd") &&
+          format(new Date(elem.check_in), "yyyy-MM-dd") <=
+            format(new Date(dates[1]), "yyyy-MM-dd")) ||
+        (format(new Date(elem.check_out), "yyyy-MM-dd") >=
+          format(new Date(dates[0]), "yyyy-MM-dd") &&
+          format(new Date(elem.check_out), "yyyy-MM-dd") <=
+            format(new Date(dates[1]), "yyyy-MM-dd"))
+      );
+    });
+    if (isUnavailableDate) {
+      showAlert(
+        prepareAlertObj("Error", "Please select available date.", "error")
+      );
+    } else {
+      const alertObj = {
+        title: "Are you sure?",
+        text: "You are booking the lord room!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Confirm!",
+      };
+      questionAlert(createTheLordRoomBooking, newValues, alertObj);
+      reset({
+        totalPeople: 0,
+      });
+    }
   };
+  // end form control section-----------------------------------------
 
   return (
     <Container pt={"5rem"} pb={"5rem"} minW={"60vw"} minH={"100vh"}>
@@ -93,20 +157,18 @@ export default function CalendarRoom({}: Props) {
                   <FormControl id="checkIn">
                     <FormLabel htmlFor="checkIn">Check in</FormLabel>
                     <Input
-                      {...register("checkIn")}
                       type="text"
                       disabled
-                      value={format(dates[0], "MM-dd-yyyy")}
+                      value={format(dates[0], "yyyy-MM-dd")}
                     />
                   </FormControl>
 
                   <FormControl id="checkOut">
                     <FormLabel htmlFor="checkOut">Check out</FormLabel>
                     <Input
-                      {...register("checkOut")}
                       type="text"
                       disabled
-                      value={format(dates[1], "MM-dd-yyyy")}
+                      value={format(dates[1], "yyyy-MM-dd")}
                     />
                   </FormControl>
 
@@ -131,6 +193,7 @@ export default function CalendarRoom({}: Props) {
                   selectRange={true}
                   value={dates}
                   minDate={today} // will not allow date more than today
+                  tileDisabled={tileDisabled}
                 />
 
                 <Flex gap={4}>

@@ -23,6 +23,7 @@ import {
 } from "@chakra-ui/react";
 import useBookingHook from "@/hooks/useBookingHook";
 import Popup from "./Popup";
+import useAuthHook from "@/hooks/useAuthHook";
 type Props = { setShowPopupTransection: any; booking: any };
 
 export default function PopupTransection({
@@ -30,6 +31,7 @@ export default function PopupTransection({
   booking,
 }: Props) {
   const { createTransection } = useBookingHook();
+  const { questionAlert } = useAuthHook();
 
   const payType = [
     { code: 1, display: "Cash" },
@@ -66,12 +68,22 @@ export default function PopupTransection({
   }, []);
 
   const onSubmit = (values: any) => {
-    createTransection({
+    const newValues = {
       booking_id: Number(booking.id),
       paid_type_id: Number(values.paidType),
       total_price: Number(values.totalPrice),
       description: values.description || "",
-    });
+    };
+    const alertObj = {
+      title: "Are you sure?",
+      text: "You are paying a transection!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Confirm!",
+    };
+    questionAlert(createTransection, newValues, alertObj);
     closePopup();
   };
 
@@ -94,10 +106,10 @@ export default function PopupTransection({
           </Flex>
 
           <Text>
-            Check In : {format(new Date(booking.check_in), "MM-dd-yyyy")}
+            Check In : {format(new Date(booking.check_in), "yyyy-MM-dd")}
           </Text>
           <Text>
-            Check Out : {format(new Date(booking.check_out), "MM-dd-yyyy")}
+            Check Out : {format(new Date(booking.check_out), "yyyy-MM-dd")}
           </Text>
           <Text>Room Number : {booking.rooms.room_name}</Text>
           <Text>Total People : {booking.total_people}</Text>

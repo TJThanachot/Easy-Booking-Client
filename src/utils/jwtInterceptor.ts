@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import axios from "axios";
 
 function jwtInterceptor() {
@@ -23,8 +24,16 @@ function jwtInterceptor() {
         error.response.status === 401 &&
         error.response.statusText === "Unauthorized"
       ) {
-        localStorage.removeItem("accessToken");
-        window.location.replace("/signIn");
+        Swal.fire({
+          title: "Unauthorized",
+          text: error,
+          icon: "error",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("accessToken");
+            window.location.replace("/signIn");
+          }
+        });
       }
     }
   );

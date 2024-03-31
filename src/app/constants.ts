@@ -2,6 +2,7 @@ export const linkColor: string = "#FFDF00";
 export const linkHoverColor: string = "#CFB53B";
 
 import * as yup from "yup";
+
 export const bookingSchema = yup.object().shape({
   checkIn: yup.string().required("Check in date is required!"),
   checkOut: yup.string().required("Check out date id required!"),
