@@ -16,7 +16,8 @@ export default function useAuthHook() {
   const signInAction = async (payload: any) => {
     try {
       const result = await axios.post(signInAPI, payload);
-      const success: boolean = result.data.message === "Successfully logged in";
+      const success: boolean =
+        result?.data?.message === "Successfully logged in";
       if (success) {
         dispatch(getToken(result.data.accessToken));
       }
